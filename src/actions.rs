@@ -10,6 +10,7 @@ use std::io::Result;
 pub enum Action {
     getFile { filePath: String },
     openDialog,
+    info { text: String },
 }
 
 #[allow(non_camel_case_types, non_snake_case)]
@@ -23,7 +24,8 @@ pub fn process(msg: &str) -> Result<String> {
             f.read_to_string(&mut buf)?;
             return Ok(serialize(buf));
         },
-        openDialog => Ok(String::from("info")),
+        openDialog => Ok(String::from("open")),
+        info { text: _ } => Ok(String::from("info")),
     }
 }
 

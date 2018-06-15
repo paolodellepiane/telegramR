@@ -15,6 +15,3 @@ ws = "0.7.6"
 
 [profile.release]
 lto = true
-
-[features]
-protocol_ws = []
