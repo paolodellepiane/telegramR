@@ -1,0 +1,20 @@
+[package]
+name = "telegramr"
+version = "0.1.0"
+authors = ["pd <pd29@gmail.com>"]
+
+[dependencies]
+web-view = "0.2.1"
+rustbreak = "1.4.0"
+serde = "1.0"
+serde_derive = "1.0"
+serde_json = "1.0"
+nickel = "0.10.1"
+snap = "0.2"
+ws = "0.7.6"
+
+[profile.release]
+lto = true
+
+[features]
+protocol_ws = []

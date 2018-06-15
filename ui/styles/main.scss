@@ -1,0 +1,17 @@
+@import "fabric.min.css";
+@import "fabric.components.min.css";
+
+$white: #fff;
+$grey: #e8e8e8;
+$green: #1F8000;
+
+.object-details-pane, .runs-pane {
+  text-align: left;
+}
+
+body {
+  font-family: sans-serif;
+  color: $green;
+  background-color: $grey;
+  text-align: center;
+}
