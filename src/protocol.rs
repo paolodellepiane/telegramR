@@ -5,16 +5,18 @@ use actions;
 use std::io::prelude::*;
 use web_view::*;
 
-pub type MyWebView = WebView<'static, ()>;
 pub struct Protocol;
-pub struct View<'a> {
-    webview: Option<&'a mut WebView<'static, ()>>,
-}
 
-impl View<'a> {
-    new() {
-        View { webview }
-    }
+// impl<'a> View<'a> {
+//     fn new() -> View<'a> { View { webview: None::<&mut WebView<'a, ()>>, } }
+//     fn with_webview(&'a mut self, webview: &'a mut WebView<'a, ()>) -> &'a mut View<'a> {
+//         self.webview = Some(webview);
+//         self
+//     }
+// }
+
+pub struct View<'a, 'b: 'a> {
+    pub webview: Option<&'a mut WebView<'b, ()>>,
 }
 
 impl Protocol {
@@ -29,8 +31,13 @@ impl Protocol {
     fn init_ws() {
         use ws::{listen, Message};
         listen("127.0.0.1:36767", |out| {
-            move |msg: Message| msg.as_text().map(|s| Protocol::handle(s, , |m, _| out.send(m).map_err(|_| "")))
+            move |msg: Message| msg.as_text().map(|s| Protocol::handle(s, &mut View { webview: None::<&mut WebView<'_, ()>> }, |m, _| out.send(m).map_err(|_| "")))
         }).expect("Failed to create WebSocket")
+    }
+
+    fn h<'a, 'b>(webview: &'a mut WebView<'b, ()>, arg: &str, _: &mut ()) {
+        let mut view = View { webview: Some(webview) };
+        Protocol::handle(arg, &mut view, |m, v| Protocol::eval(m, v))
     }
 
     fn init_interop() {
@@ -43,28 +50,18 @@ impl Protocol {
             true,
             true,
             |_| {},
-            move |webview, arg, _| Protocol::handle(arg, &mut View { webview: Some(webview) }, |m, v| Protocol::eval(m, v)),
+            Protocol::h,
             ());
     }
 
     #[allow(non_snake_case)]
-    fn handle<S>(msg: &str, webview: &mut View, send: S)
+    fn handle<S>(msg: &str, view: &mut View, send: S)
         where S: FnOnce(String, &mut View) -> Result<(), &'static str> {
-        send(actions::process(msg, webview).unwrap(), webview).expect("error sending answer")
+        send(actions::process(msg, view).unwrap(), view).expect("error sending answer")
     }
 
     fn eval(s: String, view: &mut View) -> Result<(), &'static str> {
-        match s.as_ref() {
-            "open" => {
-                view.webview.as_mut().map(|v| v.dialog(Dialog::OpenFile, "open", ""));
-            }
-            "info" => {
-                view.webview.as_mut().map(|v| v.dialog(Dialog::Alert(Alert::Info), "test", "test"));
-            }
-            _ => {
-                view.webview.as_mut().map(|v| v.eval(&format!("window.render({})", s));
-            }
-        }
+                view.webview.as_mut().map(|v| v.eval(&format!("window.render({})", s)));
         Ok(())
     }
 
