@@ -3,6 +3,7 @@ extern crate serde_json;
 use std::io::prelude::*;
 use std::fs::File;
 use std::io::Result;
+use ::protocol::View;
 
 #[allow(non_camel_case_types, non_snake_case)]
 #[derive(Deserialize)]
@@ -14,7 +15,7 @@ pub enum Action {
 }
 
 #[allow(non_camel_case_types, non_snake_case)]
-pub fn process(msg: &str) -> Result<String> {
+pub fn process(msg: &str, webview: &mut View) -> Result<String> {
     use self::Action::*;
     println!("req: {}", msg);
     match serde_json::from_str(msg).unwrap() {

@@ -5,7 +5,17 @@ use actions;
 use std::io::prelude::*;
 use web_view::*;
 
-pub struct Protocol {}
+pub type MyWebView = WebView<'static, ()>;
+pub struct Protocol;
+pub struct View<'a> {
+    webview: Option<&'a mut WebView<'static, ()>>,
+}
+
+impl View<'a> {
+    new() {
+        View { webview }
+    }
+}
 
 impl Protocol {
     pub fn new(protocol: &str) -> Protocol {
@@ -19,7 +29,7 @@ impl Protocol {
     fn init_ws() {
         use ws::{listen, Message};
         listen("127.0.0.1:36767", |out| {
-            move |msg: Message| msg.as_text().map(|s| Protocol::handle(s, |m| out.send(m).map_err(|_| "")))
+            move |msg: Message| msg.as_text().map(|s| Protocol::handle(s, , |m, _| out.send(m).map_err(|_| "")))
         }).expect("Failed to create WebSocket")
     }
 
@@ -33,26 +43,26 @@ impl Protocol {
             true,
             true,
             |_| {},
-            move |webview, arg, _| Protocol::handle(arg, |m| Protocol::eval(m, webview)),
+            move |webview, arg, _| Protocol::handle(arg, &mut View { webview: Some(webview) }, |m, v| Protocol::eval(m, v)),
             ());
     }
 
     #[allow(non_snake_case)]
-    fn handle<S>(msg: &str, send: S)
-        where S: FnOnce(String) -> Result<(), &'static str> {
-        send(actions::process(msg).unwrap()).expect("error sending answer")
+    fn handle<S>(msg: &str, webview: &mut View, send: S)
+        where S: FnOnce(String, &mut View) -> Result<(), &'static str> {
+        send(actions::process(msg, webview).unwrap(), webview).expect("error sending answer")
     }
 
-    fn eval<'a, T>(s: String, webview: &mut WebView<'a, T>) -> Result<(), &'static str> {
+    fn eval(s: String, view: &mut View) -> Result<(), &'static str> {
         match s.as_ref() {
             "open" => {
-                webview.dialog(Dialog::OpenFile, "open", "");
+                view.webview.as_mut().map(|v| v.dialog(Dialog::OpenFile, "open", ""));
             }
             "info" => {
-                webview.dialog(Dialog::Alert(Alert::Info), "test", "test");
+                view.webview.as_mut().map(|v| v.dialog(Dialog::Alert(Alert::Info), "test", "test"));
             }
             _ => {
-                webview.eval(&format!("window.render({})", s));
+                view.webview.as_mut().map(|v| v.eval(&format!("window.render({})", s));
             }
         }
         Ok(())
