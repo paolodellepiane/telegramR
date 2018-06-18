@@ -8,7 +8,6 @@ import { actions } from './actions';
 import State from './state';
 import { withLogger } from '@hyperapp/logger';
 import './rpc';
-import config from '../../config.json';
 
 window['fabric'] = fabric;
 

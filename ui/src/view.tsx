@@ -7,7 +7,7 @@ import { Textfield } from './textfield';
 export const view: View<State, Actions> = (state, actions) => (
   <main>
     <Panel />
-    <Textfield text={state.text} oninput={e => actions.setText(e.target.value)} />
+    <Textfield path={state.filePath} text={state.text} oninput={e => actions.setText(e.target.value)} />
     <br />
     <div
       style={{
@@ -17,13 +17,10 @@ export const view: View<State, Actions> = (state, actions) => (
         padding: '20px 30px'
       }}
     >
-      <button class="ms-Button" onclick={_ => actions.openDialog()}>
+      <button class="ms-Button" onclick={_ => actions.getFile()}>
         <span class="ms-Button-label">open</span>
       </button>
-      <button class="ms-Button" onclick={_ => actions.getFile('c://users/dellepiane/desktop/hyper.js')}>
-        <span class="ms-Button-label">load</span>
-      </button>
-      <button class="ms-Button" onclick={_ => actions.setText('')}>
+      <button class="ms-Button" onclick={_ => actions.setText(['', ''])}>
         <span class="ms-Button-label">reset</span>
       </button>
     </div>
