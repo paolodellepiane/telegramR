@@ -19,6 +19,11 @@ pub struct View<'a, 'b: 'a> {
     pub webview: Option<&'a mut WebView<'b, ()>>,
 }
 
+impl<'a, 'b> View<'a, 'b> {
+    pub fn new() -> View { View { webview: None::<&mut WebView<'_, ()>> } }
+    pub fn with_webview(webview: &'a mut WebView<'b, ()>) -> View { View { webview: Some(webview) } }
+}
+
 impl Protocol {
     pub fn new(protocol: &str) -> Protocol {
         match protocol {
@@ -31,7 +36,7 @@ impl Protocol {
     fn init_ws() {
         use ws::{listen, Message};
         listen("127.0.0.1:36767", |out| {
-            move |msg: Message| msg.as_text().map(|s| Protocol::handle(s, &mut View { webview: None::<&mut WebView<'_, ()>> }, |m, _| out.send(m).map_err(|_| "")))
+            move |msg: Message| msg.as_text().map(|s| Protocol::handle(s, &mut View::new(), |m, _| out.send(m).map_err(|_| "")))
         }).expect("Failed to create WebSocket")
     }
 
