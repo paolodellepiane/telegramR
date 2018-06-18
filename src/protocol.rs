@@ -2,8 +2,8 @@ extern crate serde_json;
 extern crate snap;
 
 use actions;
-use std::io::prelude::*;
 use std::error::Error;
+use std::io::prelude::*;
 use web_view::*;
 pub struct Protocol;
 
@@ -38,7 +38,9 @@ impl Protocol {
     }
 
     fn h<'a, 'b>(webview: &'a mut WebView<'b, ()>, arg: &str, _: &mut ()) {
-        Protocol::handle(arg, &mut View::new().with_webview(webview), |m, v| Protocol::eval(m, v).map_err(Box::from))
+        Protocol::handle(arg, &mut View::new().with_webview(webview), |m, v| {
+            Protocol::eval(m, v).map_err(Box::from)
+        })
     }
 
     fn init_interop() {
@@ -52,7 +54,9 @@ impl Protocol {
     #[allow(non_snake_case)]
     fn handle<S>(msg: &str, view: &mut View, send: S)
         where S: FnOnce(String, &mut View) -> Result<(), Box<Error>> {
-        send(actions::process(msg, view).unwrap(), view).expect("error sending answer")
+        if let Err(err) = actions::process(msg, view).map(|res| send(res, view)) {
+            println!("error: {:?}", err);
+        }
     }
 
     fn eval(s: String, view: &mut View) -> Result<(), &'static str> {

@@ -11,7 +11,6 @@ use web_view::*;
 #[serde(tag = "action")]
 pub enum Action {
     getFile,
-    openDialog,
     info { text: String },
 }
 
@@ -30,21 +29,11 @@ pub fn process(msg: &str, view: &mut View) -> Result<String, Box<Error>> {
                 }
                 None => Ok(String::from("nothing to open")),
             }
-        }
-        openDialog => {
-            view.webview.as_mut()
-                .map(|v| serialize(v.dialog(Dialog::OpenFile, "open", "")))
-                .ok_or(Box::from("openDialog"))
-        }
+        },
         info { text } => {
             view.webview.as_mut()
                 .map(|v| v.dialog(Dialog::Alert(Alert::Info), "", &text[..]))
                 .ok_or(Box::from("info"))
         }
     }
-}
-
-fn serialize(s: String) -> String {
-    println!("ser: {}", s);
-    serde_json::to_string(&s).unwrap()
 }
