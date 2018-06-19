@@ -65,7 +65,6 @@ impl Protocol {
             ());
     }
 
-    #[allow(non_snake_case)]
     fn handle<S>(msg: &str, view: &mut View, send: S)
         where S: FnOnce(String, &mut View) -> Result<(), Box<Error>> {
         if let Err(err) = actions::process(msg, view).map(|res| send(res, view)) {
