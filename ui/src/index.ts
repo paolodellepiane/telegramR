@@ -2,7 +2,7 @@ import 'core-js';
 import 'whatwg-fetch';
 import '../styles/main.scss';
 import { app } from 'hyperapp';
-import { fabric } from 'office-ui-fabric-js/dist/js/fabric.min';
+import { fabric } from '../vendors/fabric/fabric.min';
 import { view } from './view';
 import { actions } from './actions';
 import State from './state';
