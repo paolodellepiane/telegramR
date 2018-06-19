@@ -37,18 +37,23 @@ impl Protocol {
         }).expect("Failed to create WebSocket")
     }
 
-    fn h<'a, 'b>(webview: &'a mut WebView<'b, ()>, arg: &str, _: &mut ()) {
-        Protocol::handle(arg, &mut View::new().with_webview(webview), |m, v| {
-            Protocol::eval(m, v).map_err(Box::from)
-        })
-    }
-
     fn init_interop() {
         let mut f = snap::Reader::new(Protocol::HTML);
         let mut buffer = String::new();
         f.read_to_string(&mut buffer).expect("can't inizialize view");
         let name = "telegramR";
-        run(name, Content::Html(buffer), Some((900, 800)), true, false, |_| {}, Protocol::h, ());
+        run(name,
+            Content::Html(buffer),
+            Some((900, 800)),
+            true,
+            false,
+            |_| {},
+            |webview, arg, _| {
+                Protocol::handle(arg, &mut View::new().with_webview(webview), |m, v| {
+                    Protocol::eval(m, v).map_err(Box::from)
+                })
+            },
+            ());
     }
 
     #[allow(non_snake_case)]
