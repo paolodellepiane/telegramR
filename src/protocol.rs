@@ -2,10 +2,19 @@ extern crate serde_json;
 extern crate snap;
 
 use actions;
+use config::Config;
 use std::error::Error;
 use std::io::prelude::*;
 use web_view::*;
+
 pub struct Protocol;
+
+#[allow(non_camel_case_types)]
+#[derive(Debug, Serialize, Deserialize)]
+pub enum ProtocolKind {
+    interop,
+    ws,
+}
 
 pub struct View<'a, 'b: 'a> {
     pub webview: Option<&'a mut WebView<'b, ()>>,
@@ -20,9 +29,9 @@ impl<'a, 'b> View<'a, 'b> {
 }
 
 impl Protocol {
-    pub fn new(protocol: &str) -> Protocol {
-        match protocol {
-            "ws" => Protocol::init_ws(),
+    pub fn new(config: Config) -> Protocol {
+        match config.protocol() {
+            ProtocolKind::ws => Protocol::init_ws(),
             _ => Protocol::init_interop(),
         };
         Protocol {}
