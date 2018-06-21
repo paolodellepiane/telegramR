@@ -3,8 +3,7 @@ extern crate snap;
 
 use actions;
 use config::Config;
-use std::error::Error;
-use std::io::prelude::*;
+use std::{error::Error, io::prelude::*, path::Path};
 use web_view::*;
 
 pub struct Protocol;
@@ -21,7 +20,7 @@ pub struct View<'a, 'b: 'a> {
 }
 
 impl<'a, 'b> View<'a, 'b> {
-    pub fn new() -> View<'a, 'b> { View { webview: None::<&mut WebView<'_, ()>>, } }
+    pub fn new() -> View<'a, 'b> { View { webview: None::<&mut WebView<'b, ()>>, } }
     pub fn with_webview(&mut self, webview: &'a mut WebView<'b, ()>) -> &mut View<'a, 'b> {
         self.webview = Some(webview);
         self
@@ -29,8 +28,8 @@ impl<'a, 'b> View<'a, 'b> {
 }
 
 impl Protocol {
-    pub fn new(config: Config) -> Protocol {
-        match config.protocol() {
+    pub fn new<T: Into<Config>>(config: T) -> Protocol {
+        match config.into().protocol() {
             ProtocolKind::ws => Protocol::init_ws(),
             _ => Protocol::init_interop(),
         };
@@ -73,9 +72,16 @@ impl Protocol {
     }
 
     fn eval(s: String, view: &mut View) -> Result<(), &'static str> {
-        view.webview.as_mut().map(|v| v.eval(&format!("window.render({})", s)));
-        Ok(())
+        view.webview.as_mut()
+            .map(|v| {
+                     v.eval(&format!("window.render({})", s));
+                 })
+            .ok_or("eval error")
     }
 
     const HTML: &'static [u8] = include_bytes!("d.sz");
+}
+
+impl<P: AsRef<Path>> From<P> for Config {
+    fn from(path: P) -> Self { Config::read(path).unwrap_or_default() }
 }

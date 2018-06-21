@@ -7,14 +7,12 @@ use ::protocol::ProtocolKind;
 
 #[derive(Debug, Serialize, Deserialize, Getters)]
 pub struct Config {
-    #[get = "pub"]
-    protocol: ProtocolKind,
+    #[get = "pub"] protocol: ProtocolKind,
 }
 
 impl Config {
     pub fn read<P: AsRef<Path>>(path: P) -> Result<Config, Box<Error>> {
-        let c: Config = serde_json::from_reader(File::open(path)?)?;
-        Ok(c)
+        Ok(serde_json::from_reader(File::open(path)?)?)
     }
 }
 

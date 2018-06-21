@@ -20,6 +20,7 @@
     "@hyperapp/logger": "^0.5.0",
     "@types/node": "^10.3.3",
     "assets": "^3.0.0",
+    "bulma": "^0.7.1",
     "config.json": "^0.0.4",
     "core-js": "^2.5.7",
     "dist": "^0.1.2",

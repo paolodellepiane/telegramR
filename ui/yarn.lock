@@ -885,6 +885,10 @@ builtin-status-codes@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/builtin-status-codes/-/builtin-status-codes-3.0.0.tgz#85982878e21b98e1c66425e03d0174788f569ee8"
 
+bulma@^0.7.1:
+  version "0.7.1"
+  resolved "https://registry.yarnpkg.com/bulma/-/bulma-0.7.1.tgz#73c2e3b2930c90cc272029cbd19918b493fca486"
+
 cache-base@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/cache-base/-/cache-base-1.0.1.tgz#0a7f46416831c8b662ee36fe4e7c59d76f666ab2"
@@ -3117,16 +3121,6 @@ object.values@^1.0.4:
     es-abstract "^1.6.1"
     function-bind "^1.1.0"
     has "^1.0.1"
-
-office-ui-fabric-core@5.0.1:
-  version "5.0.1"
-  resolved "https://registry.yarnpkg.com/office-ui-fabric-core/-/office-ui-fabric-core-5.0.1.tgz#f6f27eb793ceca62366419877b73970de4841e52"
-
-office-ui-fabric-js@^1.5.0:
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/office-ui-fabric-js/-/office-ui-fabric-js-1.5.0.tgz#d77b778f79a6178f843dd757e4639ae05709d340"
-  dependencies:
-    office-ui-fabric-core "5.0.1"
 
 on-finished@~2.3.0:
   version "2.3.0"

@@ -2,6 +2,7 @@
 name = "telegramr"
 version = "0.1.0"
 authors = ["pd <pd29@gmail.com>"]
+build= "build.rs"
 
 [dependencies]
 web-view = "0.2.1"
@@ -13,6 +14,10 @@ nickel = "0.10.1"
 snap = "0.2"
 ws = "0.7.6"
 getset = "0.0.6"
+
+[target.'cfg(target_os="windows")'.build-dependencies]
+
+winres = "0.1.5"
 
 [profile.release]
 lto = true
