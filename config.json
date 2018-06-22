@@ -1,4 +1,4 @@
 {
-  "protocol": "interop",
+  "protocol": "ws",
   "devtools": "none"
 }
