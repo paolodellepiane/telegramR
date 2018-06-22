@@ -1,4 +1,3 @@
-extern crate serde_json;
 extern crate snap;
 
 use actions;
@@ -28,15 +27,13 @@ impl<'a, 'b> View<'a, 'b> {
 }
 
 impl Protocol {
-    pub fn new<T: Into<Config>>(config: T) -> Protocol {
-        match config.into().protocol() {
-            ProtocolKind::ws => Protocol::init_ws(),
-            _ => Protocol::init_interop(),
-        };
+    pub fn new<T: Into<Config>>(_config: T) -> Protocol {
+        Protocol::init_protocol();
         Protocol {}
     }
 
-    fn init_ws() {
+    #[cfg(feature = "use-ws")]
+    fn init_protocol() {
         use ws::{listen, Message};
         listen("127.0.0.1:36767", |out| {
             move |msg: Message| {
@@ -45,7 +42,8 @@ impl Protocol {
         }).expect("Failed to create WebSocket")
     }
 
-    fn init_interop() {
+    #[cfg(not(feature = "use-ws"))]
+    fn init_protocol() {
         let mut f = snap::Reader::new(Protocol::HTML);
         let mut buffer = String::new();
         f.read_to_string(&mut buffer).expect("can't inizialize view");
@@ -55,7 +53,11 @@ impl Protocol {
             Some((900, 800)),
             true,
             false,
-            |_| {},
+            move |w| {
+                w.dispatch(|webview, _| {
+                               webview.eval(&format!("window.setRpc('interop')"));
+                           })
+            },
             |webview, arg, _| {
                 Protocol::handle(arg, &mut View::new().with_webview(webview), |m, v| {
                     Protocol::eval(m, v).map_err(Box::from)
