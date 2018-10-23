@@ -7,12 +7,19 @@
       "type": "shell",
       "label": "cargo build",
       "command": "cargo",
-      "args": [
-        "build"
-      ],
-      "problemMatcher": [
-        "$rustc"
-      ],
+      "args": ["build"],
+      "problemMatcher": ["$rustc"],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
+      "type": "shell",
+      "label": "cargo build ws",
+      "command": "cargo",
+      "args": ["build", "--features", "use-ws"],
+      "problemMatcher": ["$rustc"],
       "group": {
         "kind": "build",
         "isDefault": true
@@ -22,9 +29,7 @@
       "type": "shell",
       "label": "cargo doc",
       "command": "cargo doc --open",
-      "problemMatcher": [
-        "$rustc"
-      ]
+      "problemMatcher": ["$rustc"]
     },
     {
       "type": "npm",

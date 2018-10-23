@@ -7,16 +7,36 @@
     {
       "type": "gdb",
       "request": "launch",
-      "name": "(Linux) Launch",
+      "name": "Linux Production",
       "preLaunchTask": "cargo build",
       "target": "./target/debug/telegramr",
       "cwd": "${workspaceRoot}"
     },
     {
-      "name": "(Windows) Launch",
+      "type": "gdb",
+      "request": "launch",
+      "name": "Linux Dev",
+      "preLaunchTask": "cargo build ws",
+      "target": "./target/debug/telegramr",
+      "cwd": "${workspaceRoot}"
+    },
+    {
+      "name": "Windows Production",
       "type": "cppvsdbg",
       "request": "launch",
       "preLaunchTask": "cargo build",
+      "program": "target/debug/telegramr.exe",
+      "args": [],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}",
+      "environment": [],
+      "externalConsole": true
+    },
+    {
+      "name": "Windows Dev",
+      "type": "cppvsdbg",
+      "request": "launch",
+      "preLaunchTask": "cargo build ws",
       "program": "target/debug/telegramr.exe",
       "args": [],
       "stopAtEntry": false,
