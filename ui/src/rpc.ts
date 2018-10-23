@@ -7,7 +7,7 @@ export class Rpc {
   constructor(protocol: string) {
     switch (protocol.toLowerCase()) {
       case 'ws':
-        this.invoke = this.getWsInvoke();
+        this.invoke = this.getWsInvoke() || ((_, __) => Promise.resolve(null));
         break;
       default:
         this.invoke = this.getInteropInvoke();
@@ -18,7 +18,7 @@ export class Rpc {
     window['render'] = ev => setTimeout(() => this.messages.next(ev));
     return (action: string, data: any = {}): Promise<any> => {
       if (typeof data !== 'object') throw Error('invoke: data must be an object');
-      window.external.invoke(JSON.stringify({ action, ...data }));
+      (window.external as any).invoke(JSON.stringify({ action, ...data }));
       return this.messages.pipe(take(1)).toPromise();
     };
   }
@@ -33,7 +33,9 @@ export class Rpc {
         ws.send(JSON.stringify({ action, ...data }));
         return this.messages.pipe(take(1)).toPromise();
       };
-    } catch {}
+    } catch {
+        return null;
+    }
   }
 }
 

@@ -2,7 +2,7 @@ extern crate snap;
 
 use actions;
 use config::Config;
-use std::{error::Error, io::prelude::*, path::Path};
+use std::{error::Error, path::Path};
 use web_view::*;
 
 pub struct Protocol;
@@ -45,6 +45,7 @@ impl Protocol {
 
     #[cfg(not(feature = "use-ws"))]
     fn init_protocol() {
+        use std::io::prelude::*;
         let mut f = snap::Reader::new(Protocol::HTML);
         let mut buffer = String::new();
         f.read_to_string(&mut buffer).expect("can't inizialize view");
@@ -69,7 +70,8 @@ impl Protocol {
 
     fn handle<S>(msg: &str, view: &mut View, send: S)
         where S: FnOnce(String, &mut View) -> Result<(), Box<Error>> {
-        if let Err(err) = actions::process(msg, view).map(|res| send(res, view)) {
+        if let Err(err) = actions::process(msg, view).map(|res| 
+            send(res, view)) {
             println!("error: {:?}", err);
         }
     }

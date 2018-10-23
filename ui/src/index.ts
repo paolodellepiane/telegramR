@@ -2,18 +2,15 @@ import 'core-js';
 import 'whatwg-fetch';
 import '../styles/main.scss';
 import { app } from 'hyperapp';
-import { fabric } from '../vendors/fabric/fabric.min';
 import { view } from './view';
 import { actions } from './actions';
 import State from './state';
 import { withLogger } from '@hyperapp/logger';
 import './rpc';
 
-window['fabric'] = fabric;
-
 export const initialState: State = {
   filePath: '',
-  text: 'empty'
+  text: ''
 };
 
 withLogger(app)(initialState, actions, view, document.body);
