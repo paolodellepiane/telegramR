@@ -20,6 +20,7 @@ pub struct View<'a, 'b: 'a> {
 
 impl<'a, 'b> View<'a, 'b> {
     pub fn new() -> View<'a, 'b> { View { webview: None::<&mut WebView<'b, ()>>, } }
+    #[allow(dead_code)]
     pub fn with_webview(&mut self, webview: &'a mut WebView<'b, ()>) -> &mut View<'a, 'b> {
         self.webview = Some(webview);
         self
@@ -73,6 +74,7 @@ impl Protocol {
         }
     }
 
+    #[allow(dead_code)]
     fn eval(s: String, view: &mut View) -> Result<(), &'static str> {
         view.webview.as_mut()
             .map(|v| {
@@ -81,6 +83,7 @@ impl Protocol {
             .ok_or("eval error")
     }
 
+    #[allow(dead_code)]
     const HTML: &'static [u8] = include_bytes!("d.sz");
 }
 

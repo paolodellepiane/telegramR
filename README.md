@@ -1,6 +1,6 @@
 # Project Title
 
-This project is a proof of concept: the purpose is to use boscop bindings for zserge webview and rust backend, with a ui as lightweight as possible (hyperui + parcel + bulma), easily development (development mode uses websockets as communication layer between ui and rust backend, permitting splitted debug of ui by using the builtin browser dev tools, and rust) and a "production" mode that zips and bundles the ui inside the final executable.
+This project is a proof of concept: the purpose is to use boscop bindings for zserge webview and rust backend, with a ui as lightweight as possible (hyperui + parcel + bulma), easily development (development mode uses websockets as communication layer between ui and rust backend, permitting splitted debugging of ui by using the built-in browser dev tools, and rust debugging in vscode) and a "production" mode that zips and bundles the ui inside the final executable.
 
 ## Getting Started
 * Clone this repository
@@ -9,12 +9,13 @@ This project is a proof of concept: the purpose is to use boscop bindings for zs
         * ```cd ui```
         * ```npm install or yarn```
         * ```npm run start```
+        * ```open localhost:1234 on your browser```
     * In vscode
         * ```Open root folder```
         * ```Go to Debug tab```
         * ```select (Windows/Linux Dev)```
         * ```Press F5```
-
+        
 * Production mode
     * From command prompt/terminal, run:
         * ```cd ui```

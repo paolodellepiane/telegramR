@@ -7,7 +7,7 @@
     {
       "type": "gdb",
       "request": "launch",
-      "name": "Linux Production",
+      "name": "Linux Prod",
       "preLaunchTask": "cargo build",
       "target": "./target/debug/telegramr",
       "cwd": "${workspaceRoot}"
@@ -21,7 +21,7 @@
       "cwd": "${workspaceRoot}"
     },
     {
-      "name": "Windows Production",
+      "name": "Windows Prod",
       "type": "cppvsdbg",
       "request": "launch",
       "preLaunchTask": "cargo build",
@@ -30,7 +30,10 @@
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}",
       "environment": [],
-      "externalConsole": true
+      "externalConsole": true,
+      "logging": {
+        "moduleLoad": false
+      }
     },
     {
       "name": "Windows Dev",
@@ -42,21 +45,10 @@
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}",
       "environment": [],
-      "externalConsole": true
-    },
-    {
-      "type": "chrome",
-      "request": "attach",
-      "name": "Attach to Chrome",
-      "port": 9222,
-      "webRoot": "${workspaceFolder}"
-    },
-    {
-      "type": "chrome",
-      "request": "launch",
-      "name": "Launch Chrome against localhost",
-      "url": "http://localhost:8080",
-      "webRoot": "${workspaceFolder}"
+      "externalConsole": true,
+      "logging": {
+        "moduleLoad": false
+      }
     }
   ]
 }

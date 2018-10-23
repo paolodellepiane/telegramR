@@ -4,7 +4,7 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "type": "shell",
+      "type": "process",
       "label": "cargo build",
       "command": "cargo",
       "args": ["build"],
@@ -15,7 +15,7 @@
       }
     },
     {
-      "type": "shell",
+      "type": "process",
       "label": "cargo build ws",
       "command": "cargo",
       "args": ["build", "--features", "use-ws"],
@@ -26,7 +26,7 @@
       }
     },
     {
-      "type": "shell",
+      "type": "process",
       "label": "cargo doc",
       "command": "cargo doc --open",
       "problemMatcher": ["$rustc"]
