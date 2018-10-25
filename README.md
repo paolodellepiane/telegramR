@@ -43,6 +43,8 @@ Rust nightly >= 1.30.0-nightly
 
 Node >= 10
 
+szip (cargo install szip)
+
 ## Authors
 
 * **Paolo Dellepiane** - [GitHub](https://github.com/paolod29)
