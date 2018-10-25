@@ -28,12 +28,14 @@ It tries to combine:
     * ```Open root folder```
     * ```Go to Debug tab```
     * ```select (Windows/Linux Dev)```
-    * ```Press F5``` (refresh browser if communication is not working)
+    * ```Press F5```  
+    refresh browser if ws communication is not working
 
 * Production mode
   * From command prompt/terminal, run:
     * ```cd ui```
-    * ```node ../scripts/release.js```
+    * ```node ../scripts/release.js```  
+    you'll find the resulting executable in target/release folder
 
 ## Prerequisites
 
