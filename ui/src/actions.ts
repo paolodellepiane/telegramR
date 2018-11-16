@@ -1,9 +1,10 @@
 import State from './state';
 import { ActionsType } from 'hyperapp';
 import { rpc } from './rpc';
+import { timer } from 'rxjs';
 
 export class Actions implements ActionsType<State, Actions> {
-  hideNotificationLater = delay => (_, actions: Actions) => setTimeout(actions.hideNotification, delay);
+  hideNotificationLater = delay => (_, actions: Actions) => timer(1000).subscribe(actions.hideNotification);
   hideNotification = () => ({ notificationShown: false });
   showNotification = (text: string) => ({ notificationShown: true, notification: text });
   getFile = () => (_, actions: Actions) => rpc.invoke('getFile').then(actions.setText);
