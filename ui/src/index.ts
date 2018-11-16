@@ -9,12 +9,16 @@ import { withLogger } from '@hyperapp/logger';
 import './rpc';
 
 export const initialState: State = {
+  notification: '',
+  notificationShown: false,
   filePath: '',
   text: ''
 };
 
 withLogger(app)(initialState, actions, view, document.body);
 
+
+// const config = { devtools: 'hyperapp-redux-devtools'};
 // let main;
 // if (!config.devtools || config.devtools === 'none') main = withLogger(app)(initialState, actions, view, document.body);
 // else
