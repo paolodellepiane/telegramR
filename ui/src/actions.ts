@@ -9,7 +9,7 @@ export class Actions implements ActionsType<State, Actions> {
     timer(v.delay).subscribe(() => actions.hideNotification(v.id));
   hideNotification = id => (state: State, _) => (state.notificationId === id ? { notification: '' } : state);
   showNotification = (notification: string) => (_, actions: Actions) => {
-    actions.hideNotificationLater({ id: ++notificationId, delay: 5000 });
+    actions.hideNotificationLater({ id: ++notificationId, delay: 1000 });
     return { notification, notificationId };
   };
   getFile = () => (_, actions: Actions) => rpc.invoke('getFile').then(actions.setText);

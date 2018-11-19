@@ -1,17 +1,8 @@
 import { h, View } from 'hyperapp';
 import State from './state';
 import { Actions } from './actions';
-import { Enter, Exit } from '@hyperapp/transitions';
 
-const Notification = ({ message }) => (
-  <Enter css={{ opacity: '0' }}>
-    <Exit css={{ opacity: '0', transform: 'scale(2.0,2.0)' }}>
-      <div class="notification is-success" key="3" style="{{ height: '100px' }}">
-        {message}
-      </div>
-    </Exit>
-  </Enter>
-);
+const Notification = ({ message }) => <div class={'notification is-success hidden-div ' + (message && ' show')}>{message}</div>;
 
 export const view: View<State, Actions> = (state, actions) => (
   <main>
@@ -29,6 +20,6 @@ export const view: View<State, Actions> = (state, actions) => (
         </button>
       </div>
     </div>
-    {state.notification && <Notification message={state.notification}/>}
+    <Notification message={state.notification} />
   </main>
 );

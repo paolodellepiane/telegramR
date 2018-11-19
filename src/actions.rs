@@ -16,7 +16,6 @@ use web_view::*;
 
 pub enum Action {
     getFile,
-
     info { text: String },
 }
 

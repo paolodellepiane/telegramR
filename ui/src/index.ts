@@ -17,8 +17,7 @@ export const initialState: State = {
 
 withLogger(app)(initialState, actions, view, document.body);
 
-
-// const config = { devtools: 'hyperapp-redux-devtools'};
+// const config = { devtools: 'hyperapp-redux-devtools' };
 // let main;
 // if (!config.devtools || config.devtools === 'none') main = withLogger(app)(initialState, actions, view, document.body);
 // else
@@ -29,8 +28,6 @@ withLogger(app)(initialState, actions, view, document.body);
 //       );
 //       break;
 //     case 'hyperapp-devtools':
-//       import('hyperapp-devtools').then(
-//         devtools => (main = withLogger(devtools.default(app))(initialState, actions, view, document.body))
-//       );
+//       import('hyperapp-devtools').then(devtools => (main = withLogger(devtools.default(app))(initialState, actions, view, document.body)));
 //       break;
 //   }

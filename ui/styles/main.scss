@@ -1,1 +1,14 @@
-@import "bulma.min.css";
+@import 'bulma.min.css';
+
+.hidden-div {
+  height: 50px;
+  transition: 0.3s;
+  opacity: 0;
+  visibility: hidden;
+  transform: scale(2);
+  &.show {
+    opacity: 1;
+    visibility: visible;
+    transform: scale(1);
+  }
+}
