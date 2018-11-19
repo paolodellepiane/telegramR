@@ -1,6 +1,6 @@
 export default interface State {
-    notificationShown: boolean,
     notification: string,
+    notificationId: number,
     text: string,
     filePath: string,
 }
