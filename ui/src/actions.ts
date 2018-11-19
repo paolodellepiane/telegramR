@@ -5,10 +5,11 @@ import { timer } from 'rxjs';
 
 let notificationId = 0;
 export class Actions implements ActionsType<State, Actions> {
-  hideNotificationLater = (id, delay) => (_, actions: Actions) => timer(delay).subscribe(() => actions.hideNotification(id));
-  hideNotification = id => (state: State, _) => state.notificationId === id ? { notification: '' } : state;
+  hideNotificationLater = (v: { id: number; delay: number }) => (_, actions: Actions) =>
+    timer(v.delay).subscribe(() => actions.hideNotification(v.id));
+  hideNotification = id => (state: State, _) => (state.notificationId === id ? { notification: '' } : state);
   showNotification = (notification: string) => (_, actions: Actions) => {
-    actions.hideNotificationLater(++notificationId, 2000);
+    actions.hideNotificationLater({ id: ++notificationId, delay: 5000 });
     return { notification, notificationId };
   };
   getFile = () => (_, actions: Actions) => rpc.invoke('getFile').then(actions.setText);
