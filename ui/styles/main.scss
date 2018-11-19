@@ -1,7 +1,10 @@
 @import 'bulma.min.css';
 
+html {
+  background: #2b2b2b;
+}
+
 .hidden-div {
-  height: 50px;
   transition: 0.3s;
   opacity: 0;
   visibility: hidden;

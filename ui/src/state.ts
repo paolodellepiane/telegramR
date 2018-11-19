@@ -1,6 +1,8 @@
 export default interface State {
-    notification: string,
-    notificationId: number,
-    text: string,
-    filePath: string,
+  notification?: {
+    text: string;
+    id: number;
+  };
+  text: string;
+  filePath: string;
 }

@@ -28,6 +28,7 @@
     "hyperapp": "^1.2.6",
     "hyperapp-devtools": "^0.3.0",
     "hyperapp-redux-devtools": "^1.1.6",
+    "lodash": "^4.17.11",
     "rxjs": "^6.2.1",
     "whatwg-fetch": "^2.0.4"
   },
