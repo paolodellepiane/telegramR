@@ -1,12 +1,14 @@
-@import 'bulma.min.css';
+@import 'bulma-fluent.min.css';
 
 html {
+  overflow-y: hidden;
+  -ms-overflow-y: hidden;
   background: #2b2b2b;
 }
 
 html,
 body {
-  height: 90%;
+  height: 100%;
 }
 
 textarea {
