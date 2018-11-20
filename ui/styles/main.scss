@@ -4,11 +4,24 @@ html {
   background: #2b2b2b;
 }
 
+html,
+body {
+  height: 90%;
+}
+
+textarea {
+  overflow: auto;
+}
+
 .hidden-div {
   transition: 0.3s;
   opacity: 0;
   visibility: hidden;
   transform: scale(2);
+  width: 30%;
+  position: absolute;
+  right: 0;
+  top: 0;
   &.show {
     opacity: 1;
     visibility: visible;
