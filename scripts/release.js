@@ -1,26 +1,16 @@
-const { execSync } = require('child_process');
+const u = require('./u');
+const path = require('path');
 
-run('"./node_modules/.bin/rimraf" dist', '../ui');
-run('"./node_modules/.bin/parcel" build src/index.html --public-url ./', '../ui');
-run('"node_modules/.bin/inline-assets" dist/index.html ../src/d', '../ui');
-run('rm -rf src/d.sz', '..');
-run('szip src/d', '..');
-run('cargo build --release', '..');
+const base = path.join(__dirname, '..');
+u.runSync('"./node_modules/.bin/rimraf" dist', path.join(base, 'ui'));
+u.runSync('"./node_modules/.bin/parcel" build src/index.html --public-url ./', path.join(base, 'ui'));
+u.runSync('"node_modules/.bin/inline-assets" dist/index.html ../src/d', path.join(base, 'ui'));
+u.runSync('rm -rf src/d.sz', base);
+u.runSync('szip src/d', base);
+u.runSync('cargo build --release', base);
 
-if (process.platform === 'win32')
-  run(
+if (u.isWin)
+  u.runSync(
     'ResourceHacker.exe  -open ../target/release/telegramr.exe -save ../sfx/tr.exe -action addoverwrite -res ../icon.ico -mask ICONGROUP,1,',
-    '../tools'
+    path.join(base, 'tools')
   );
-
-function run(cmd, cwd) {
-  console.log(`executing ${cmd}`);
-  cwd = cwd || { cwd: '.' };
-  try {
-    let output = execSync(cmd, { cwd });
-    console.log(output.toString());
-  } catch (e) {
-    console.log(e);
-    process.exit();
-  }
-}
