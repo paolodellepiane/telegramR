@@ -88,9 +88,8 @@ import * as monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 import 'monaco-editor/esm/vs/basic-languages/javascript/javascript.contribution';
 // import 'monaco-editor/esm/vs/basic-languages/typescript/typescript.contribution';
 
+let model;
 export const Monaco = ({ value, onchange }) => {
-  let model = monaco.editor.getModels()[0];
-  let skipOnDidChangeContent = false;
   function initMonaco(where) {
     monaco.editor.create(where, {
       language: 'javascript',
@@ -100,18 +99,14 @@ export const Monaco = ({ value, onchange }) => {
     });
     monaco.editor.setTheme('vs-dark');
     model = monaco.editor.getModels()[0];
-    model.onDidChangeContent(__ => !skipOnDidChangeContent && onchange(model.getValue()));
+    model.onDidChangeContent(__ => model.getValue() !== value && onchange(model.getValue()));
   }
+  model && model.getValue() !== value && model.setValue(value);
   return (
     <div
       id="monaco-container"
       style={{ flex: '1', border: 'none' }}
       oncreate={() => initMonaco(document.getElementById('monaco-container'))}
-      onupdate={() => {
-        skipOnDidChangeContent = true;
-        model.setValue(value);
-        skipOnDidChangeContent = false;
-      }}
     />
   );
 };
