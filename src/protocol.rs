@@ -38,7 +38,8 @@ impl Protocol {
         use ws::{listen, Message};
         listen("127.0.0.1:36767", |out| {
             move |msg: Message| {
-                msg.as_text().map(|s| Protocol::handle(s, &mut View::new(), |m, _| out.send(m).map_err(Box::from)))
+                msg.as_text()
+                   .map(|s| Protocol::handle(s, &mut View::new(), |m, _| out.send(m).map_err(Box::from)))
             }
         }).expect("Failed to create WebSocket")
     }
@@ -50,37 +51,36 @@ impl Protocol {
         let mut buffer = String::new();
         f.read_to_string(&mut buffer).expect("can't inizialize view");
         let name = "telegramR";
-        run(name,
-            Content::Html(buffer),
-            Some((900, 800)),
-            true,
-            false,
-            move |w| {
-                w.dispatch(|webview, _| {
-                               webview.eval(&format!("window.setRpc('interop')"));
-                           })
-            },
-            |webview, arg, _| {
-                Protocol::handle(arg, &mut View::new().with_webview(webview), |m, v| {
-                    Protocol::eval(m, v).map_err(Box::from)
-                })
-            },
-            ());
+        WebViewBuilder::new().title(name)
+                             .content(Content::Html(buffer))
+                             .size(900, 700)
+                             .resizable(true)
+                             .user_data(())
+                             .invoke_handler(move |webview, arg| {
+                                                 Ok(Protocol::handle(arg, &mut View::new().with_webview(webview), |m, v| {
+                                                     Protocol::eval(m, v).map_err(Box::from)
+                                                 }))
+                                             })
+                             .build()
+                             .unwrap()
+                             .run()
+                             .unwrap();
+        //w.dispatch(|webview, _| { webview.eval(&format!("window.setRpc('interop')")); })
     }
 
     fn handle<S>(msg: &str, view: &mut View, send: S)
         where S: FnOnce(String, &mut View) -> Result<(), Box<Error>> {
-        if let Err(err) = actions::process(msg, view).map(|res| 
-            send(res, view)) {
+        if let Err(err) = actions::process(msg, view).map(|res| send(res, view)) {
             println!("error: {:?}", err);
         }
     }
 
     #[allow(dead_code)]
     fn eval(s: String, view: &mut View) -> Result<(), &'static str> {
-        view.webview.as_mut()
+        view.webview
+            .as_mut()
             .map(|v| {
-                     v.eval(&format!("window.render({})", s));
+                     v.eval(&format!("window.render({})", s)).unwrap();
                  })
             .ok_or("eval error")
     }

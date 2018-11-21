@@ -28,7 +28,7 @@ pub fn process(msg: &str, view: &mut View) -> Result<String, Box<Error>> {
     match serde_json::from_str(msg).unwrap() {
         getFile => match &mut view.webview {
             Some(webview) => {
-                let path = webview.dialog(Dialog::OpenFile, "open", "");
+                let path = webview.dialog(Dialog::OpenFile, "open", "").unwrap();
                 let mut buf = String::new();
                 File::open(&path)?.read_to_string(&mut buf)?;
                 Ok(serde_json::to_string(&(path, buf)).unwrap())
@@ -37,7 +37,7 @@ pub fn process(msg: &str, view: &mut View) -> Result<String, Box<Error>> {
         },
         info { text } => view.webview
                              .as_mut()
-                             .map(|v| v.dialog(Dialog::Alert(Alert::Info), "", &text[..]))
+                             .map(|v| v.dialog(Dialog::Alert(Alert::Info), "", &text[..]).unwrap())
                              .ok_or(Box::from("info")),
     }
 }

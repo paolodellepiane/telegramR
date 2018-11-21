@@ -5,6 +5,7 @@ export class Rpc {
   public readonly messages = new Subject<string>();
   public invoke: (action: string, data?: any) => Promise<any>;
   constructor(protocol: string) {
+    console.log('[RPC] Setting protocol ' + protocol);
     switch (protocol.toLowerCase()) {
       case 'ws':
         this.invoke = this.getWsInvoke() || ((_, __) => Promise.resolve(null));
@@ -34,12 +35,10 @@ export class Rpc {
         return this.messages.pipe(take(1)).toPromise();
       };
     } catch {
-        return null;
+      return null;
     }
   }
 }
 
-export let rpc = new Rpc('ws');
-window['setRpc'] = (protocol: string) => {
-  rpc = new Rpc(protocol);
-};
+console.log('NODE_ENV: ' + process.env.NODE_ENV);
+export const rpc = new Rpc(process.env.NODE_ENV === 'production' ? 'interop' : 'ws');

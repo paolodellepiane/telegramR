@@ -50,7 +50,7 @@ import * as monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 // import 'monaco-editor/esm/vs/basic-languages/bat/bat.contribution.js';
 // import 'monaco-editor/esm/vs/basic-languages/coffee/coffee.contribution.js';
 // import 'monaco-editor/esm/vs/basic-languages/cpp/cpp.contribution.js';
-// import 'monaco-editor/esm/vs/basic-languages/csharp/csharp.contribution.js';
+import 'monaco-editor/esm/vs/basic-languages/csharp/csharp.contribution.js';
 // import 'monaco-editor/esm/vs/basic-languages/csp/csp.contribution.js';
 // import 'monaco-editor/esm/vs/basic-languages/css/css.contribution.js';
 // import 'monaco-editor/esm/vs/basic-languages/dockerfile/dockerfile.contribution.js';
@@ -86,7 +86,7 @@ import * as monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 // import 'monaco-editor/esm/vs/basic-languages/xml/xml.contribution.js';
 // import 'monaco-editor/esm/vs/basic-languages/yaml/yaml.contribution.js';
 import 'monaco-editor/esm/vs/basic-languages/javascript/javascript.contribution';
-// import 'monaco-editor/esm/vs/basic-languages/typescript/typescript.contribution';
+import 'monaco-editor/esm/vs/basic-languages/typescript/typescript.contribution';
 
 let model;
 export const Monaco = ({ value, onchange }) => {

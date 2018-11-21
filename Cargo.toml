@@ -4,12 +4,13 @@ version = "0.1.0"
 authors = ["pd <pd29@gmail.com>"]
 
 [dependencies]
-web-view = "0.2.1"
 serde = "1.0"
 serde_derive = "1.0"
 serde_json = "1.0"
 snap = "0.2"
 ws = { version = "0.7.9", optional = true }
+# web-view = "0.2.1"
+web-view = { path = "../web-view", version = "0.3.0" }
 
 [profile.release]
 lto = true
