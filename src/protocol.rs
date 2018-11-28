@@ -1,7 +1,6 @@
-extern crate snap;
-
 use actions;
 use config::Config;
+use splitter;
 use std::{error::Error, path::Path};
 use web_view::*;
 
@@ -46,13 +45,9 @@ impl Protocol {
 
     #[cfg(not(feature = "use-ws"))]
     fn init_protocol() {
-        use std::io::prelude::*;
-        let mut f = snap::Reader::new(Protocol::HTML);
-        let mut buffer = String::new();
-        f.read_to_string(&mut buffer).expect("can't inizialize view");
-        let name = "telegramR";
-        WebViewBuilder::new().title(name)
-                             .content(Content::Html(buffer))
+        let out_dir = splitter::unzip_to_tmp(Protocol::HTML, "tr").expect("failed to expand view");
+        WebViewBuilder::new().title("tr")
+                             .content(Content::Url(out_dir.join("index.html").to_str().unwrap()))
                              .size(900, 700)
                              .resizable(true)
                              .user_data(())
@@ -65,7 +60,6 @@ impl Protocol {
                              .unwrap()
                              .run()
                              .unwrap();
-        //w.dispatch(|webview, _| { webview.eval(&format!("window.setRpc('interop')")); })
     }
 
     fn handle<S>(msg: &str, view: &mut View, send: S)
@@ -86,7 +80,7 @@ impl Protocol {
     }
 
     #[allow(dead_code)]
-    const HTML: &'static [u8] = include_bytes!("d.sz");
+    const HTML: &'static [u8] = include_bytes!("d");
 }
 
 impl<P: AsRef<Path>> From<P> for Config {

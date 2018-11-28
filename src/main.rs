@@ -9,10 +9,9 @@ extern crate ws;
 mod actions;
 mod config;
 mod protocol;
+mod splitter;
 
 use config::Config;
 use protocol::Protocol;
 
-fn main() {
-    Protocol::new(Config::default());
-}
+fn main() { Protocol::new(Config::default()); }
