@@ -1,0 +1,12 @@
+[package]
+name = "merger"
+version = "0.1.0"
+authors = ["pd <pd@pd.pd>"]
+
+[dependencies]
+lzma = "*"
+snap = "0.2"
+
+[profile.release]
+lto = true
+panic = "abort"
