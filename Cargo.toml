@@ -1,7 +1,8 @@
 [package]
 name = "telegramr"
 version = "0.1.0"
-authors = ["pd <pd29@gmail.com>"]
+authors = ["pd29 <pd29@gmail.com>"]
+edition = "2018"
 
 [dependencies]
 serde = "1.0"
@@ -10,7 +11,7 @@ serde_json = "1.0"
 lzma = "*"
 snap = "0.2"
 ws = { version = "0.7.9", optional = true }
-web-view = { path = "deps/web-view", version = "0.3.0" }
+web-view = { path = "deps/web-view", version = "0.3.0", optional = true }
 
 [profile.release]
 lto = true
@@ -18,3 +19,6 @@ panic = "abort"
 
 [features]
 use-ws = ["ws"]
+use-wv = ["web-view"]
+
+default = ["use-ws"]

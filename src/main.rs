@@ -1,17 +1,22 @@
 #![windows_subsystem = "windows"]
 extern crate serde_json;
-extern crate web_view;
 #[macro_use]
 extern crate serde_derive;
-#[cfg(feature = "use-ws")]
-extern crate ws;
 
 mod actions;
 mod config;
 mod protocol;
 mod splitter;
 
-use config::Config;
-use protocol::Protocol;
+#[cfg(feature = "use-ws")]
+mod ws_protocol;
+#[cfg(feature = "use-wv")]
+mod wv_protocol;
 
-fn main() { Protocol::new(Config::default()); }
+use crate::config::Config;
+use crate::protocol::Engine;
+
+// TODO: pass actions as paramteres; Protocol -> Engine
+fn main() {
+    Engine::new(Config::default());
+}
