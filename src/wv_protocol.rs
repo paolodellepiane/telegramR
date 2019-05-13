@@ -6,12 +6,11 @@ use std::error::Error;
 use std::path::Path;
 use web_view::*;
 
-struct WvView<'a> {
+struct Embedded<'a> {
     webview: &'a mut WebView<'a, ()>,
 }
-impl View for WvView {}
 
-impl Protocol for Engine {
+impl Protocol for Embedded {
     fn init<T: Into<Config>>(_config: T) {
         let out_dir = splitter::unzip_to_tmp(Protocol::HTML, "tr").expect("failed to expand view");
         WebViewBuilder::new()
@@ -21,7 +20,7 @@ impl Protocol for Engine {
             .resizable(true)
             .user_data(())
             .invoke_handler(move |webview, arg| {
-                Ok(Protocol::handle(arg, &mut WvView { webview }, |m, v| {
+                Ok(Protocol::handle(arg, &mut Embedded { webview }, |m, v| {
                     Protocol::eval(m, v).map_err(Box::from)
                 }))
             })
@@ -31,16 +30,16 @@ impl Protocol for Engine {
             .unwrap();
     }
 
-    fn handle<S>(msg: &str, view: &mut View, send: S)
+    fn handle<S>(msg: &str, view: &mut Bag, send: S)
     where
-        S: FnOnce(String, &mut View) -> Result<(), Box<Error>>,
+        S: FnOnce(String, &mut Bag) -> Result<(), Box<Error>>,
     {
         if let Err(err) = Self::process(msg, view).map(|res| send(res, view)) {
             println!("error: {:?}", err);
         }
     }
 
-    fn eval(s: String, view: &mut View) -> Result<(), &'static str> {
+    fn eval(s: String, view: &mut Bag) -> Result<(), &'static str> {
         view.view
             .as_mut()
             .map(|v| {
@@ -50,7 +49,7 @@ impl Protocol for Engine {
     }
 
     #[allow(non_camel_case_types, non_snake_case)]
-    fn process(msg: &str, view: &mut View) -> Result<String, Box<Error>> {
+    fn process(msg: &str, view: &mut Bag) -> Result<String, Box<Error>> {
         use self::Action::*;
         println!("req: {}", msg);
         match serde_json::from_str(msg).unwrap() {

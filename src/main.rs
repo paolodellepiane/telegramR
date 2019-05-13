@@ -13,9 +13,8 @@ mod ws_protocol;
 mod wv_protocol;
 
 use crate::config::Config;
-use crate::protocol::Engine;
 
 // TODO: pass actions as paramteres; Protocol -> Engine
 fn main() {
-    Engine::new(Config::default());
+    // Engine::new(Config::default());
 }
