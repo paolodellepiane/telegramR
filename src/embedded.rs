@@ -1,18 +1,19 @@
+use std::error::Error;
+
+use web_view::*;
+
 use crate::actions::*;
 use crate::config::Config;
 use crate::protocol::*;
 use crate::splitter;
-use std::error::Error;
-use std::path::Path;
-use web_view::*;
 
-struct Embedded<'a> {
-    view: &'a mut WebView<'a, ()>,
-}
+type View<'a> = WebView<'a, ()>;
 
-impl<'a> Bag for WebView<'a, ()> {}
+struct Embedded {}
 
-impl<'a> Protocol<WebView<'a, ()>> for Embedded<'a> {
+impl<'a> Bag for View<'a> {}
+
+impl<'a> Protocol<View<'a>> for Embedded {
     fn init<C: Into<Config>>(_config: C) {
         let out_dir = splitter::unzip_to_tmp(HTML, "tr").expect("failed to expand view");
         WebViewBuilder::new()
@@ -21,22 +22,20 @@ impl<'a> Protocol<WebView<'a, ()>> for Embedded<'a> {
             .size(900, 700)
             .resizable(true)
             .user_data(())
-            .invoke_handler(move |&mut view: &mut WebView<_>, arg| {
-                Ok(Embedded::handle(arg, &mut view, |m, v| Embedded::eval(m, v).map_err(Box::from)))
-            })
+            .invoke_handler(move |view, arg| Ok(Embedded::handle(arg, view, |m, v| Embedded::eval(m, v).map_err(Box::from))))
             .build()
             .unwrap()
             .run()
             .unwrap();
     }
 
-    fn eval(s: String, view: &mut WebView<'a, ()>) -> Result<(), &'static str> {
+    fn eval(s: String, view: &mut View<'a>) -> Result<(), &'static str> {
         view.eval(&format!("window.render({})", s)).map_err(|_| "eval error")
     }
 
-    fn handle<S>(msg: &str, view: &mut WebView<'a, ()>, send: S)
+    fn handle<S>(msg: &str, view: &mut View<'a>, send: S)
     where
-        S: FnOnce(String, &mut WebView<'a, ()>) -> Result<(), Box<Error>>,
+        S: FnOnce(String, &mut View<'a>) -> Result<(), Box<Error>>,
     {
         if let Err(err) = Embedded::process(msg, view).map(|res| send(res, view)) {
             println!("error: {:?}", err);
@@ -44,12 +43,12 @@ impl<'a> Protocol<WebView<'a, ()>> for Embedded<'a> {
     }
 
     #[allow(non_camel_case_types, non_snake_case)]
-    fn process(msg: &str, view: &mut WebView<'a, ()>) -> Result<String, Box<Error>> {
+    fn process(msg: &str, _: &mut View<'a>) -> Result<String, Box<Error>> {
         use self::Action::*;
         println!("req: {}", msg);
         match serde_json::from_str(msg).unwrap() {
             getFile => Ok(serde_json::to_string(&("mock file path", LOREM)).unwrap()),
-            info { text } => Err("info".into()),
+            info { text: _ } => Err("info".into()),
         }
     }
 }

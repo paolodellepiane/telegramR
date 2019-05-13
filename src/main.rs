@@ -1,7 +1,7 @@
 #![windows_subsystem = "windows"]
-extern crate serde_json;
 #[macro_use]
 extern crate serde_derive;
+extern crate serde_json;
 
 mod actions;
 mod config;
@@ -15,8 +15,8 @@ mod embedded;
 #[cfg(feature = "use-embedded")]
 mod splitter;
 
-use crate::config::Config;
-use crate::protocol::Protocol;
+// use crate::config::Config;
+// use crate::protocol::Protocol;
 
 fn main() {
     // browser::Browser::init(Config::default());
