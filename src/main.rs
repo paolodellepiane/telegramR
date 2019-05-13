@@ -6,7 +6,6 @@ extern crate serde_derive;
 mod actions;
 mod config;
 mod protocol;
-mod splitter;
 
 #[cfg(feature = "use-ws")]
 mod ws_protocol;

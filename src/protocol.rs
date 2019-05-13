@@ -12,15 +12,15 @@ impl Engine {
     }
 }
 
-pub trait Protocol {
+pub trait Protocol<T: View> {
     fn init<C: Into<Config>>(_config: C);
-    fn handle<S>(msg: &str, view: &mut View, send: S)
+    fn handle<S>(msg: &str, view: &mut T, send: S)
     where
-        S: FnOnce(String, &mut View) -> Result<(), Box<Error>>;
+        S: FnOnce(String, &mut T) -> Result<(), Box<Error>>;
 
-    fn eval(s: String, view: &mut View) -> Result<(), &'static str>;
+    fn eval(s: String, view: &mut T) -> Result<(), &'static str>;
 
-    fn process(msg: &str, view: &mut View) -> Result<String, Box<Error>>;
+    fn process(msg: &str, view: &mut T) -> Result<String, Box<Error>>;
 }
 
 impl<P: AsRef<Path>> From<P> for Config {
