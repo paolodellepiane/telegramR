@@ -5,7 +5,7 @@ use std::path::Path;
 pub trait Bag {}
 impl Bag for () {}
 
-pub trait Protocol<T: Bag = ()> {
+pub trait Protocol<T: Bag> {
     fn init<C: Into<Config>>(_config: C);
     fn handle<S>(msg: &str, bag: &mut T, send: S)
     where

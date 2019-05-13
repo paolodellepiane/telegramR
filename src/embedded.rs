@@ -7,22 +7,22 @@ use std::path::Path;
 use web_view::*;
 
 struct Embedded<'a> {
-    webview: &'a mut WebView<'a, ()>,
+    view: &'a mut WebView<'a, ()>,
 }
 
-impl Protocol for Embedded {
-    fn init<T: Into<Config>>(_config: T) {
-        let out_dir = splitter::unzip_to_tmp(Protocol::HTML, "tr").expect("failed to expand view");
+impl<'a> Bag for WebView<'a, ()> {}
+
+impl<'a> Protocol<WebView<'a, ()>> for Embedded<'a> {
+    fn init<C: Into<Config>>(_config: C) {
+        let out_dir = splitter::unzip_to_tmp(HTML, "tr").expect("failed to expand view");
         WebViewBuilder::new()
             .title("tr")
             .content(Content::Url(out_dir.join("index.html").to_str().unwrap()))
             .size(900, 700)
             .resizable(true)
             .user_data(())
-            .invoke_handler(move |webview, arg| {
-                Ok(Protocol::handle(arg, &mut Embedded { webview }, |m, v| {
-                    Protocol::eval(m, v).map_err(Box::from)
-                }))
+            .invoke_handler(move |&mut view: &mut WebView<_>, arg| {
+                Ok(Embedded::handle(arg, &mut view, |m, v| Embedded::eval(m, v).map_err(Box::from)))
             })
             .build()
             .unwrap()
@@ -30,31 +30,26 @@ impl Protocol for Embedded {
             .unwrap();
     }
 
-    fn handle<S>(msg: &str, view: &mut Bag, send: S)
+    fn eval(s: String, view: &mut WebView<'a, ()>) -> Result<(), &'static str> {
+        view.eval(&format!("window.render({})", s)).map_err(|_| "eval error")
+    }
+
+    fn handle<S>(msg: &str, view: &mut WebView<'a, ()>, send: S)
     where
-        S: FnOnce(String, &mut Bag) -> Result<(), Box<Error>>,
+        S: FnOnce(String, &mut WebView<'a, ()>) -> Result<(), Box<Error>>,
     {
-        if let Err(err) = Self::process(msg, view).map(|res| send(res, view)) {
+        if let Err(err) = Embedded::process(msg, view).map(|res| send(res, view)) {
             println!("error: {:?}", err);
         }
     }
 
-    fn eval(s: String, view: &mut Bag) -> Result<(), &'static str> {
-        view.view
-            .as_mut()
-            .map(|v| {
-                v.eval(&format!("window.render({})", s)).unwrap();
-            })
-            .ok_or("eval error")
-    }
-
     #[allow(non_camel_case_types, non_snake_case)]
-    fn process(msg: &str, view: &mut Bag) -> Result<String, Box<Error>> {
+    fn process(msg: &str, view: &mut WebView<'a, ()>) -> Result<String, Box<Error>> {
         use self::Action::*;
         println!("req: {}", msg);
         match serde_json::from_str(msg).unwrap() {
             getFile => Ok(serde_json::to_string(&("mock file path", LOREM)).unwrap()),
-            info { text } => Box::from("info"),
+            info { text } => Err("info".into()),
         }
     }
 }

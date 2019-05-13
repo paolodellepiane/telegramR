@@ -7,14 +7,17 @@ mod actions;
 mod config;
 mod protocol;
 
-#[cfg(feature = "use-ws")]
-mod ws_protocol;
-#[cfg(feature = "use-wv")]
-mod wv_protocol;
+#[cfg(feature = "use-browser")]
+mod browser;
+
+#[cfg(feature = "use-embedded")]
+mod embedded;
+#[cfg(feature = "use-embedded")]
+mod splitter;
 
 use crate::config::Config;
+use crate::protocol::Protocol;
 
-// TODO: pass actions as paramteres; Protocol -> Engine
 fn main() {
-    // Engine::new(Config::default());
+    // browser::Browser::init(Config::default());
 }

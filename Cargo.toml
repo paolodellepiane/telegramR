@@ -18,7 +18,7 @@ lto = true
 panic = "abort"
 
 [features]
-use-ws = ["ws"]
-use-wv = ["web-view"]
+use-browser = ["ws"]
+use-embedded = ["web-view"]
 
-default = ["use-ws"]
+default = ["use-embedded"]
