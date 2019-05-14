@@ -21,4 +21,4 @@ panic = "abort"
 use-browser = ["ws"]
 use-embedded = ["web-view"]
 
-default = ["use-embedded"]
+default = ["use-browser"]

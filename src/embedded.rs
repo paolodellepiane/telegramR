@@ -1,11 +1,9 @@
-use std::error::Error;
-
-use web_view::*;
-
 use crate::actions::*;
 use crate::config::Config;
 use crate::protocol::*;
 use crate::splitter;
+use std::error::Error;
+use web_view::*;
 
 type Wv<'a> = WebView<'a, ()>;
 

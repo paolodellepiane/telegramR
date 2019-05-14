@@ -1,4 +1,4 @@
-extern crate serde_json;
+use serde_derive::Deserialize;
 
 #[allow(non_camel_case_types, non_snake_case)]
 #[derive(Deserialize)]

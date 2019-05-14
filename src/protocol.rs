@@ -4,7 +4,7 @@ use std::path::Path;
 
 pub struct View;
 
-pub trait Protocol<T> {
+pub trait Protocol<T = ()> {
     fn init<C: Into<Config>>(_config: C);
     fn handle<S>(msg: &str, bag: &mut T, send: S)
     where
