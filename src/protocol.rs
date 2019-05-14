@@ -2,10 +2,9 @@ use crate::config::Config;
 use std::error::Error;
 use std::path::Path;
 
-pub trait Bag {}
-impl Bag for () {}
+pub struct View;
 
-pub trait Protocol<T: Bag> {
+pub trait Protocol<T> {
     fn init<C: Into<Config>>(_config: C);
     fn handle<S>(msg: &str, bag: &mut T, send: S)
     where

@@ -3,35 +3,33 @@ use crate::config::Config;
 use crate::protocol::*;
 use std::error::Error;
 
-pub struct Browser {}
-
-impl Protocol for Browser {
+impl Protocol for View {
     fn init<T: Into<Config>>(_config: T) {
         use ws::{listen, Message};
         listen("127.0.0.1:36767", |out| {
             move |msg: Message| {
                 msg.as_text()
-                    .map(|s| Browser::handle(s, &mut Browser {}, |m, _| out.send(m).map_err(Box::from)))
+                    .map(|s| View::handle(s, &mut View {}, |m, _| out.send(m).map_err(Box::from)))
             }
         })
         .expect("Failed to create WebSocket");
     }
 
-    fn handle<S>(msg: &str, bag: &mut Browser, send: S)
+    fn handle<S>(msg: &str, bag: &mut View, send: S)
     where
-        S: FnOnce(String, &mut Browser) -> Result<(), Box<Error>>,
+        S: FnOnce(String, &mut View) -> Result<(), Box<Error>>,
     {
-        if let Err(err) = Browser::process(msg, bag).map(|res| send(res, bag)) {
+        if let Err(err) = View::process(msg, bag).map(|res| send(res, bag)) {
             println!("error: {:?}", err);
         }
     }
 
-    fn eval(_: String, _: &mut Browser) -> Result<(), &'static str> {
+    fn eval(_: String, _: &mut View) -> Result<(), &'static str> {
         Err("eval error")
     }
 
     #[allow(non_camel_case_types, non_snake_case)]
-    fn process(msg: &str, _: &mut Browser) -> Result<String, Box<Error>> {
+    fn process(msg: &str, _: &mut View) -> Result<String, Box<Error>> {
         use self::Action::*;
         println!("req: {}", msg);
         match serde_json::from_str(msg).unwrap() {

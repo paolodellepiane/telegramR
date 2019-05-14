@@ -7,13 +7,9 @@ use crate::config::Config;
 use crate::protocol::*;
 use crate::splitter;
 
-type View<'a> = WebView<'a, ()>;
+type Wv<'a> = WebView<'a, ()>;
 
-struct Embedded {}
-
-impl<'a> Bag for View<'a> {}
-
-impl<'a> Protocol<View<'a>> for Embedded {
+impl<'a> Protocol<Wv<'a>> for View {
     fn init<C: Into<Config>>(_config: C) {
         let out_dir = splitter::unzip_to_tmp(HTML, "tr").expect("failed to expand view");
         WebViewBuilder::new()
@@ -22,28 +18,28 @@ impl<'a> Protocol<View<'a>> for Embedded {
             .size(900, 700)
             .resizable(true)
             .user_data(())
-            .invoke_handler(move |view, arg| Ok(Embedded::handle(arg, view, |m, v| Embedded::eval(m, v).map_err(Box::from))))
+            .invoke_handler(move |v, arg| Ok(View::handle(arg, v, |m, v| View::eval(m, v).map_err(Box::from))))
             .build()
             .unwrap()
             .run()
             .unwrap();
     }
 
-    fn eval(s: String, view: &mut View<'a>) -> Result<(), &'static str> {
-        view.eval(&format!("window.render({})", s)).map_err(|_| "eval error")
-    }
-
-    fn handle<S>(msg: &str, view: &mut View<'a>, send: S)
+    fn handle<S>(msg: &str, view: &mut Wv<'a>, send: S)
     where
-        S: FnOnce(String, &mut View<'a>) -> Result<(), Box<Error>>,
+        S: FnOnce(String, &mut Wv<'a>) -> Result<(), Box<Error>>,
     {
-        if let Err(err) = Embedded::process(msg, view).map(|res| send(res, view)) {
+        if let Err(err) = View::process(msg, view).map(|res| send(res, view)) {
             println!("error: {:?}", err);
         }
     }
 
+    fn eval(s: String, view: &mut Wv<'a>) -> Result<(), &'static str> {
+        view.eval(&format!("window.render({})", s)).map_err(|_| "eval error")
+    }
+
     #[allow(non_camel_case_types, non_snake_case)]
-    fn process(msg: &str, _: &mut View<'a>) -> Result<String, Box<Error>> {
+    fn process(msg: &str, _: &mut Wv<'a>) -> Result<String, Box<Error>> {
         use self::Action::*;
         println!("req: {}", msg);
         match serde_json::from_str(msg).unwrap() {

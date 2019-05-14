@@ -15,9 +15,9 @@ mod embedded;
 #[cfg(feature = "use-embedded")]
 mod splitter;
 
-// use crate::config::Config;
-// use crate::protocol::Protocol;
+use crate::config::Config;
+use crate::protocol::Protocol;
 
 fn main() {
-    // browser::Browser::init(Config::default());
+    protocol::View::init(Config::default());
 }
