@@ -18,8 +18,8 @@
   },
   "dependencies": {
     "@hyperapp/logger": "^0.5.0",
-    "@hyperapp/transitions": "^1.0.2",
     "@types/node": "^10.3.3",
+    "hyperapp-transitions": "^1.0.2",
     "assets": "^3.0.0",
     "config.json": "^0.0.4",
     "core-js": "^2.5.7",
