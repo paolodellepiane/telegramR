@@ -90,13 +90,15 @@ import 'monaco-editor/esm/vs/basic-languages/typescript/typescript.contribution'
 
 let model;
 export const Monaco = ({ value, onchange }) => {
-  function initMonaco(where) {
-    monaco.editor.create(where, {
+  function initMonaco(where: HTMLElement) {
+    let m = monaco.editor.create(where, {
       language: 'javascript',
       fontSize: 17,
       mouseWheelZoom: true,
-      wordWrap: 'off'
+      wordWrap: 'on',
+      automaticLayout: false
     });
+    window.onresize = () => m.layout(where.getBoundingClientRect());
     monaco.editor.setTheme('vs-dark');
     model = monaco.editor.getModels()[0];
     model.onDidChangeContent(__ => model.getValue() !== value && onchange(model.getValue()));
@@ -106,7 +108,7 @@ export const Monaco = ({ value, onchange }) => {
     <div
       id="monaco-container"
       style={{ flex: '1', border: 'none' }}
-      oncreate={() => initMonaco(document.getElementById('monaco-container'))}
+      oncreate={() => initMonaco(document.getElementById('monaco-container')!)}
     />
   );
 };
