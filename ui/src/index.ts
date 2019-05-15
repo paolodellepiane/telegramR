@@ -24,6 +24,6 @@ else {
     console.log('enable hyperapp-devtools');
     import('hyperapp-devtools').then(devtools => (main = withLogger(devtools.default(app))(initialState, actions, view, document.body)));
   } else if (config.devtools === 'hyperapp-redux-devtools') {
-    // import('hyperapp-redux-devtools').then(devtools => withLogger(devtools.default(app))(initialState, actions, view, document.body));
+    import('hyperapp-redux-devtools').then(devtools => withLogger(devtools.default(app))(initialState, actions, view, document.body));
   }
 }
