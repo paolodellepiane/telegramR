@@ -88,8 +88,15 @@ import 'monaco-editor/esm/vs/basic-languages/csharp/csharp.contribution.js';
 import 'monaco-editor/esm/vs/basic-languages/javascript/javascript.contribution';
 import 'monaco-editor/esm/vs/basic-languages/typescript/typescript.contribution';
 
+const l = t => (console.log(t), t);
+
 let model;
 export const Monaco = ({ value, onchange }) => {
+  function resize(m) {
+    let r = document.getElementById('main')!.getBoundingClientRect();
+    m.layout({ height: r.height - 56, width: r.width - 20 }); // todo
+  }
+
   function initMonaco(where: HTMLElement) {
     let m = monaco.editor.create(where, {
       language: 'javascript',
@@ -98,16 +105,17 @@ export const Monaco = ({ value, onchange }) => {
       wordWrap: 'on',
       automaticLayout: false
     });
-    window.onresize = () => m.layout(where.getBoundingClientRect());
+    window.onresize = () => resize(m);
     monaco.editor.setTheme('vs-dark');
     model = monaco.editor.getModels()[0];
     model.onDidChangeContent(__ => model.getValue() !== value && onchange(model.getValue()));
+    resize(m);
   }
   model && model.getValue() !== value && model.setValue(value);
   return (
     <div
       id="monaco-container"
-      style={{ flex: '1', border: 'none' }}
+      style={{ flex: '1', border: 'none', height: '100%' }}
       oncreate={() => initMonaco(document.getElementById('monaco-container')!)}
     />
   );

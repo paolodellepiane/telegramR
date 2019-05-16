@@ -40,6 +40,5 @@ export class Rpc {
   }
 }
 
-console.log('NODE_ENV: ' + process.env.NODE_ENV);
-// todo: export const rpc = new Rpc(process.env.NODE_ENV === 'production' ? 'interop' : 'ws');
-export const rpc = new Rpc('ws');
+console.log('NODE_ENV: ' + process.env.MODE);
+export const rpc = new Rpc(process.env.RPC || (process.env.NODE_ENV === 'production' ? 'interop' : 'ws'));

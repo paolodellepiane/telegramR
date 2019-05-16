@@ -11,7 +11,7 @@ const Notification = ({ message }) => (
 );
 
 export const view: View<State, Actions> = (state: State, actions: Actions) => (
-  <main style={{ display: 'flex', height: '100%' }}>
+  <main id="main" style={{ display: 'flex', height: '100%' }}>
     <div style={{ display: 'flex', flexDirection: 'column', width: '100%', margin: '10px' }}>
       <Monaco value={state.text} onchange={v => actions.setText([state.filePath, v])} />
       <div style={{ flex: '0', display: 'flex', justifyContent: 'center', minHeight: '46px' }}>
