@@ -40,5 +40,5 @@ export class Rpc {
   }
 }
 
-console.log('NODE_ENV: ' + process.env.MODE);
+console.log('env.RPC: ' + process.env.RPC);
 export const rpc = new Rpc(process.env.RPC || (process.env.NODE_ENV === 'production' ? 'interop' : 'ws'));

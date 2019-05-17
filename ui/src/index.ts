@@ -15,7 +15,14 @@ export const initialState: State = {
 
 const isIE = /*@cc_on!@*/ false || !!document['documentMode'];
 if (isIE) console.log('IE detected');
-if (process.env.NODE_ENV === 'production') withLogger(app)(initialState, actions, view, document.body);
+if (process.env.NODE_ENV === 'production') {
+  if (process.env.DEVTOOLS === 'redux') {
+ console.log('enable hyperapp-redux-devtools');
+    import('hyperapp-redux-devtools').then(devtools => withLogger(devtools.default(app))(initialState, actions, view, document.body));
+  } else {
+    withLogger(app)(initialState, actions, view, document.body);
+  }
+}
 else {
   const config = { devtools: 'hyperapp-redux-devtools' };
   console.log('config:', config);
