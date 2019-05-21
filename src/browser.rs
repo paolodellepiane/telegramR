@@ -28,7 +28,7 @@ impl MinimalServer {
     }
 
     fn handle_connection(mut stream: TcpStream) {
-        let RE = Regex::new(r"GET (/.*)HTTP/1.1").unwrap();
+        let RE = Regex::new(r"GET /(.*) HTTP/1.1").unwrap();
         let mut buffer = [0; 1024];
         stream.read(&mut buffer).unwrap();
         let req = String::from_utf8_lossy(&buffer);
