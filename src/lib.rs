@@ -4,7 +4,13 @@ mod protocol;
 mod u;
 
 #[cfg(feature = "browser")]
-mod browser;
+#[path = ""]
+mod browser_modules {
+    pub mod browser;
+    pub mod minimal_server;
+}
+#[cfg(feature = "browser")]
+pub use browser_modules::*;
 
 #[cfg(feature = "embedded")]
 #[path = ""]
