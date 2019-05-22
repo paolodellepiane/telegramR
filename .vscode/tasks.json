@@ -5,9 +5,9 @@
   "tasks": [
     {
       "type": "process",
-      "label": "cargo build",
+      "label": "cargo build embedded",
       "command": "cargo",
-      "args": ["build"],
+      "args": ["build", "--features", "embedded"],
       "problemMatcher": ["$rustc"],
       "group": {
         "kind": "build",
@@ -16,9 +16,9 @@
     },
     {
       "type": "process",
-      "label": "cargo build ws",
+      "label": "cargo build browser",
       "command": "cargo",
-      "args": ["build", "--features", "use-ws"],
+      "args": ["build", "--features", "browser"],
       "problemMatcher": ["$rustc"],
       "group": {
         "kind": "build",

@@ -1,13 +1,31 @@
 use lazy_static::lazy_static;
 use regex::Regex;
-use std::fmt;
-use std::fs;
-use std::io::{Read, Write};
-use std::net::{TcpListener, TcpStream, ToSocketAddrs};
-use std::path::Path;
+use std::{
+    fmt, fs,
+    io::{Read, Write},
+    net::{TcpListener, TcpStream, ToSocketAddrs},
+    path::Path,
+};
 
 lazy_static! {
     static ref RE: Regex = Regex::new("GET /(.*)HTTP/1.1").unwrap();
+}
+
+trait HttpMessenger {
+    fn not_found(&mut self);
+    fn static_file<P: AsRef<Path>>(&mut self, path: P);
+}
+
+impl HttpMessenger for TcpStream {
+    fn not_found(&mut self) { self.write("HTTP/1.1 404 NOT FOUND\r\n\r\n".as_bytes()).unwrap(); }
+    fn static_file<P: AsRef<Path>>(&mut self, uri: P) {
+        if let Ok(contents) = fs::read_to_string(uri) {
+            let response = format!("HTTP/1.1 200 OK\r\n\r\n{}", contents);
+            self.write(response.as_bytes()).unwrap();
+        } else {
+            self.not_found();
+        }
+    }
 }
 
 pub struct MinimalServer {}
@@ -33,16 +51,10 @@ impl MinimalServer {
                 uri = "index.html";
             }
             let uri = base_uri.join(uri);
-            let uri = uri.to_str().unwrap();
-            println!("GET {}", uri);
-            if let Ok(contents) = fs::read_to_string(uri) {
-                let response = format!("HTTP/1.1 200 OK\r\n\r\n{}", contents);
-                stream.write(response.as_bytes()).unwrap();
-            } else {
-                stream.write("HTTP/1.1 404 NOT FOUND\r\n\r\n".as_bytes()).unwrap();
-            }
+            println!("GET {}", uri.to_string_lossy());
+            stream.static_file(uri);
         } else {
-            stream.write("HTTP/1.1 404 NOT FOUND\r\n\r\n".as_bytes()).unwrap();
+            stream.not_found();
         }
         stream.flush().unwrap();
     }

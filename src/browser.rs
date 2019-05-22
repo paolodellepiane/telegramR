@@ -1,10 +1,5 @@
-use crate::actions::*;
-use crate::config::Config;
-use crate::minimal_server::MinimalServer;
-use crate::protocol::*;
-use crate::u::*;
-use std::error::Error;
-use std::thread;
+use crate::{actions::*, config::Config, minimal_server::MinimalServer, protocol::*, u::*};
+use std::{error::Error, thread};
 
 impl Protocol for View {
     fn init<T: Into<Config>>(_config: T) {
@@ -16,24 +11,19 @@ impl Protocol for View {
         listen("127.0.0.1:36767", |out| {
             move |msg: Message| {
                 msg.as_text()
-                    .map(|s| View::handle(s, &mut (), |m, _| out.send(m).map_err(Box::from)))
+                   .map(|s| View::handle(s, &mut (), |m, _| out.send(m).map_err(Box::from)))
             }
-        })
-        .expect("Failed to create WebSocket");
+        }).expect("Failed to create WebSocket");
     }
 
     fn handle<S>(msg: &str, bag: &mut (), send: S)
-    where
-        S: FnOnce(String, &mut ()) -> Result<(), Box<Error>>,
-    {
+        where S: FnOnce(String, &mut ()) -> Result<(), Box<Error>> {
         if let Err(err) = View::process(msg, bag).map(|res| send(res, bag)) {
             println!("error: {:?}", err);
         }
     }
 
-    fn eval(_: String, _: &mut ()) -> Result<(), &'static str> {
-        Err("eval error")
-    }
+    fn eval(_: String, _: &mut ()) -> Result<(), &'static str> { Err("eval error") }
 
     #[allow(non_camel_case_types, non_snake_case)]
     fn process(msg: &str, _: &mut ()) -> Result<String, Box<Error>> {

@@ -5,13 +5,6 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Python: Terminal (integrated)",
-      "type": "python",
-      "request": "launch",
-      "program": "${file}",
-      "console": "integratedTerminal"
-    },
-    {
       "type": "gdb",
       "request": "launch",
       "name": "Linux Prod",
@@ -31,7 +24,7 @@
       "name": "Windows Prod",
       "type": "cppvsdbg",
       "request": "launch",
-      "preLaunchTask": "cargo build",
+      "preLaunchTask": "cargo build embedded",
       "program": "target/debug/telegramr.exe",
       "args": [],
       "stopAtEntry": false,
@@ -46,7 +39,7 @@
       "name": "Windows Dev",
       "type": "cppvsdbg",
       "request": "launch",
-      "preLaunchTask": "cargo build ws",
+      "preLaunchTask": "cargo build browser",
       "program": "target/debug/telegramr.exe",
       "args": [],
       "stopAtEntry": false,
